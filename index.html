@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LF Online - Controle de Estoque</title>
+    <!-- Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilo base para a fonte e transições suaves */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* cinza claro de fundo */
+        }
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        
+        <!-- Cabeçalho -->
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-indigo-600">LF Online</h1>
+            <p class="text-gray-500">Seu controle de estoque simples e na nuvem.</p>
+        </header>
+
+        <!-- Seção para Adicionar Novos Produtos -->
+        <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Adicionar Novo Produto</h2>
+            <form id="add-product-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div class="md:col-span-2">
+                    <label for="product-name" class="block text-sm font-medium text-gray-700">Nome do Produto</label>
+                    <input type="text" id="product-name" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="product-category" class="block text-sm font-medium text-gray-700">Categoria</label>
+                    <input type="text" id="product-category" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="product-quantity" class="block text-sm font-medium text-gray-700">Quantidade</label>
+                    <input type="number" id="product-quantity" required min="0" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="md:col-span-4 flex justify-end">
+                     <button type="submit" class="w-full md:w-auto inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Adicionar Produto
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Menu de Categorias e Estoque -->
+        <main>
+            <h2 class="text-2xl font-semibold mb-4">Estoque Atual</h2>
+            <!-- Menu de Filtro por Categoria -->
+            <nav id="category-menu" class="flex flex-wrap gap-2 mb-6 pb-4 border-b border-gray-200">
+                <button class="category-btn bg-indigo-600 text-white py-2 px-4 rounded-full text-sm font-medium">Todos</button>
+                <!-- Categorias serão inseridas aqui pelo JavaScript -->
+            </nav>
+
+            <!-- Grade de Produtos -->
+            <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Produtos serão inseridos aqui -->
+                 <p id="loading-message" class="text-gray-500 col-span-full">Carregando produtos do banco de dados...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Template do Card de Produto (invisível) -->
+    <template id="product-card-template">
+        <div class="card bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
+            <div class="p-6 flex-grow">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold category">Categoria</div>
+                <h3 class="block mt-1 text-lg leading-tight font-medium text-black name">Nome do Produto</h3>
+                <p class="mt-2 text-gray-500">
+                    Quantidade em estoque: <span class="font-bold text-xl quantity">0</span>
+                </p>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center gap-2">
+                <div class="flex items-center gap-2">
+                    <button class="decrease-btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-full">-</button>
+                    <button class="increase-btn bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded-full">+</button>
+                </div>
+                <button class="delete-btn text-red-500 hover:text-red-700 font-semibold text-sm">Remover</button>
+            </div>
+        </div>
+    </template>
+
+
+    <!-- Módulos do Firebase -->
+    <script type="module">
+        // Importar as funções necessárias do SDK do Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // =================================================================================
+        // COLE SUAS CREDENCIAIS DO FIREBASE AQUI! (Passo 2 do guia de configuração)
+        // =================================================================================
+         const firebaseConfig = {
+    apiKey: "AIzaSyAvDgnao2zBz80fDHjkOkn29b3hGE37DG0",
+    authDomain: "lf-online-estoque-5ab16.firebaseapp.com",
+    projectId: "lf-online-estoque-5ab16",
+    storageBucket: "lf-online-estoque-5ab16.firebasestorage.app",
+    messagingSenderId: "852047134912",
+    appId: "1:852047134912:web:6b54009262be45fd3b2d25"
+  };
+        // =================================================================================
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Referências aos elementos do DOM
+        const addProductForm = document.getElementById('add-product-form');
+        const productList = document.getElementById('product-list');
+        const categoryMenu = document.getElementById('category-menu');
+        const productCardTemplate = document.getElementById('product-card-template');
+        const loadingMessage = document.getElementById('loading-message');
+
+        let allProducts = []; // Array para guardar todos os produtos
+        let activeCategory = 'Todos'; // Categoria ativa no filtro
+        let isAuthReady = false; // Flag para saber se a autenticação está pronta
+
+        // Fazer login anônimo para ter permissão de acesso ao banco (baseado nas regras de segurança)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuário anônimo logado
+                console.log("Usuário anônimo autenticado:", user.uid);
+                isAuthReady = true;
+                fetchAndRenderProducts(); // Começar a buscar os dados
+            } else {
+                 signInAnonymously(auth).catch((error) => {
+                    console.error("Erro na autenticação anônima:", error);
+                    alert("Não foi possível conectar ao banco de dados. Verifique suas credenciais do Firebase.");
+                });
+            }
+        });
+
+        // Função para renderizar os produtos na tela
+        const renderProducts = () => {
+            productList.innerHTML = ''; // Limpa a lista antes de renderizar
+            
+            const productsToRender = activeCategory === 'Todos' 
+                ? allProducts 
+                : allProducts.filter(p => p.categoria === activeCategory);
+
+            if(productsToRender.length === 0 && allProducts.length > 0) {
+                 productList.innerHTML = `<p class="text-gray-500 col-span-full">Nenhum produto encontrado na categoria "${activeCategory}".</p>`;
+                 return;
+            }
+
+            if(allProducts.length === 0){
+                loadingMessage.innerText = "Nenhum produto no estoque. Adicione o primeiro!";
+                productList.appendChild(loadingMessage);
+                return;
+            }
+            
+            productsToRender.forEach(product => {
+                const card = productCardTemplate.content.cloneNode(true);
+                card.querySelector('.name').textContent = product.nome;
+                card.querySelector('.category').textContent = product.categoria;
+                card.querySelector('.quantity').textContent = product.quantidade;
+
+                // Adicionar eventos aos botões do card
+                card.querySelector('.increase-btn').addEventListener('click', () => updateQuantity(product.id, 1));
+                card.querySelector('.decrease-btn').addEventListener('click', () => updateQuantity(product.id, -1));
+                card.querySelector('.delete-btn').addEventListener('click', () => deleteProduct(product.id));
+                
+                productList.appendChild(card);
+            });
+        };
+
+        // Função para renderizar o menu de categorias
+        const renderCategories = () => {
+            // Extrai categorias únicas do array de produtos
+            const categories = [...new Set(allProducts.map(p => p.categoria))];
+            
+            // Limpa o menu (mantendo o botão "Todos")
+            categoryMenu.innerHTML = `<button class="category-btn ${activeCategory === 'Todos' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-gray-300 py-2 px-4 rounded-full text-sm font-medium">Todos</button>`;
+            
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.textContent = category;
+                button.className = `category-btn ${activeCategory === category ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-gray-300 py-2 px-4 rounded-full text-sm font-medium`;
+                categoryMenu.appendChild(button);
+            });
+        };
+
+        // Escuta por mudanças na coleção 'produtos' em tempo real
+        const fetchAndRenderProducts = () => {
+            if (!isAuthReady) return; // Só busca se a autenticação estiver ok
+
+            const productsCollection = collection(db, 'produtos');
+            onSnapshot(productsCollection, (snapshot) => {
+                allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts();
+                renderCategories();
+            }, (error) => {
+                console.error("Erro ao buscar produtos: ", error);
+                loadingMessage.innerText = "Erro ao carregar dados. Verifique a configuração do Firebase e as regras de segurança.";
+                alert("Erro ao conectar com o banco de dados. Verifique o console para mais detalhes (F12).");
+            });
+        };
+        
+        // Adicionar novo produto
+        addProductForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAuthReady) {
+                alert("Aguarde a conexão com o banco de dados ser estabelecida.");
+                return;
+            }
+
+            const nome = document.getElementById('product-name').value;
+            const categoria = document.getElementById('product-category').value;
+            const quantidade = parseInt(document.getElementById('product-quantity').value);
+
+            if(nome && categoria && !isNaN(quantidade)) {
+                try {
+                    await addDoc(collection(db, 'produtos'), {
+                        nome: nome,
+                        categoria: categoria,
+                        quantidade: quantidade
+                    });
+                    addProductForm.reset();
+                } catch (error) {
+                    console.error("Erro ao adicionar produto: ", error);
+                    alert("Ocorreu um erro ao salvar o produto.");
+                }
+            }
+        });
+
+        // Atualizar quantidade (+1 ou -1)
+        const updateQuantity = async (id, amount) => {
+             if (!isAuthReady) return;
+             const productRef = doc(db, 'produtos', id);
+             try {
+                await updateDoc(productRef, {
+                    quantidade: increment(amount)
+                });
+             } catch (error) {
+                 console.error("Erro ao atualizar quantidade: ", error);
+             }
+        };
+
+        // Deletar produto
+        const deleteProduct = async (id) => {
+             if (!isAuthReady) return;
+             if (confirm('Tem certeza que deseja remover este produto?')) {
+                 const productRef = doc(db, 'produtos', id);
+                 try {
+                    await deleteDoc(productRef);
+                 } catch (error) {
+                     console.error("Erro ao deletar produto: ", error);
+                 }
+             }
+        };
+
+        // Lidar com cliques no menu de categoria (delegação de evento)
+        categoryMenu.addEventListener('click', (e) => {
+            if(e.target.classList.contains('category-btn')){
+                activeCategory = e.target.textContent;
+                renderProducts(); // Re-renderiza os produtos com o filtro
+                renderCategories(); // Re-renderiza o menu para destacar o botão ativo
+            }
+        });
+
+    </script>
+</body>
+</html>
