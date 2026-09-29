@@ -1,192 +1,475 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LF Corporation | Soluções Integradas</title>
+    <title>Luiz Feliph | Analista de TI & Empreendedor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                            dark: '#0f172a',
+                            darker: '#020617'
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #e74c3c;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --whatsapp-color: #25D366;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            background-color: #020617; /* Tailwind brand-darker */
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 4rem 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 2px;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 1rem;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .service-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-top: 4px solid var(--primary-color);
         }
 
-        .service-card:hover {
+        .glass-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(14, 165, 233, 0.3);
         }
 
-        .service-card h2 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .service-card p {
-            margin-bottom: 2rem;
-            color: #666;
-            min-height: 80px;
+        .gradient-bg {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
         }
 
-        .instagram-btn {
-            display: inline-block;
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            color: white;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: opacity 0.3s ease;
+        /* Efeito de fundo animado simples */
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
         }
-
-        .instagram-btn:hover {
-            opacity: 0.9;
+        
+        /* Animações de scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
-
-        .whatsapp-container {
-            text-align: center;
-            margin-top: 4rem;
-            padding-bottom: 3rem;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
-
-        .whatsapp-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--whatsapp-color);
-            color: white;
-            text-decoration: none;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        .whatsapp-btn:hover {
-            transform: scale(1.05);
-            background-color: #1ebe57;
-        }
-
-        .whatsapp-btn svg {
-            margin-right: 10px;
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background-color: var(--primary-color);
-            color: white;
-            margin-top: 2rem;
-        }
-
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
     </style>
 </head>
-<body>
+<body class="antialiased font-sans relative selection:bg-brand-500 selection:text-white">
 
-    <header>
-        <h1>LF Corporation</h1>
-        <p>Inovação, Tecnologia e Personalização em um só lugar.</p>
-    </header>
-
-    <div class="container">
-        <div class="services-grid">
-            
-            <div class="service-card">
-                <h2>LF Laser</h2>
-                <p>Especialistas em corte e gravação a laser. Criamos peças exclusivas e personalizadas com alta precisão em materiais como MDF, acrílico e muito mais para dar vida ao seu projeto.</p>
-                <a href="https://www.instagram.com/lflaser_" target="_blank" class="instagram-btn">@lflaser_</a>
-            </div>
-
-            <div class="service-card">
-                <h2>LF Byte</h2>
-                <p>Soluções completas em tecnologia da informação. Oferecemos suporte técnico especializado, manutenção de computadores e gestão de infraestrutura de redes para otimizar o seu dia a dia.</p>
-                <a href="https://www.instagram.com/lfbyte" target="_blank" class="instagram-btn">@lfbyte</a>
-            </div>
-
-            <div class="service-card">
-                <h2>Mendes 3D</h2>
-                <p>O futuro da manufatura na sua mão. Serviços de impressão 3D e prototipagem rápida para criar peças complexas, funcionais ou artigos decorativos com excelente acabamento.</p>
-                <a href="https://www.instagram.com/mendes3d_" target="_blank" class="instagram-btn">@mendes3d_</a>
-            </div>
-
-        </div>
-
-        <div class="whatsapp-container">
-            <a href="https://wa.me/5598984220207?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20serviços%20da%20LF%20Corporation." target="_blank" class="whatsapp-btn">
-                <svg viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                </svg>
-                Fale pelo WhatsApp
-            </a>
-        </div>
+    <!-- Fundo decorativo -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="bg-glow top-[-20%] left-[-10%]"></div>
+        <div class="bg-glow bottom-[-20%] right-[-10%]" style="background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(0,0,0,0) 70%);"></div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 LF Corporation. Todos os direitos reservados.</p>
+    <!-- Navegação -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="font-bold text-2xl tracking-tighter">feliph<span class="text-brand-500">.</span>com</span>
+                </div>
+                
+                <!-- Menu Desktop -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#sobre" class="hover:text-brand-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Sobre</a>
+                        <a href="#empresas" class="hover:text-brand-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Minhas Empresas</a>
+                        <a href="#contato" class="gradient-bg text-white px-5 py-2.5 rounded-full text-sm font-medium hover:shadow-lg hover:shadow-brand-500/30 transition-all">Contato</a>
+                    </div>
+                </div>
+
+                <!-- Botão Menu Mobile -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none p-2">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Overlay -->
+        <div id="mobile-menu" class="md:hidden hidden absolute top-20 left-0 w-full glass-card border-t-0 rounded-b-2xl shadow-xl">
+            <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col">
+                <a href="#sobre" class="mobile-link text-gray-300 hover:text-white hover:bg-slate-800/50 block px-4 py-3 rounded-xl text-base font-medium">Sobre</a>
+                <a href="#empresas" class="mobile-link text-gray-300 hover:text-white hover:bg-slate-800/50 block px-4 py-3 rounded-xl text-base font-medium">Minhas Empresas</a>
+                <a href="#contato" class="mobile-link text-brand-400 font-semibold block px-4 py-3 rounded-xl text-base">Contato</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="text-center max-w-3xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700/50 bg-slate-800/30 backdrop-blur-sm mb-8 animate-fade-in-up">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
+                    </span>
+                    <span class="text-sm font-medium text-slate-300">Disponível para novos projetos</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up delay-1">
+                    Olá, eu sou <br />
+                    <span class="gradient-text">Luiz Feliph</span>
+                </h1>
+                
+                <p class="mt-4 text-xl md:text-2xl text-slate-400 mb-10 font-light animate-fade-in-up delay-2">
+                    Analista de TI especializado em soluções de infraestrutura e empreendedor apaixonado por tecnologia e inovação.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-3">
+                    <a href="#empresas" class="gradient-bg text-white px-8 py-4 rounded-full text-lg font-medium hover:shadow-lg hover:shadow-brand-500/30 transition-all flex items-center justify-center gap-2 group">
+                        Conheça meus serviços
+                        <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="#contato" class="px-8 py-4 rounded-full text-lg font-medium border border-slate-600 hover:bg-slate-800/50 transition-all flex items-center justify-center gap-2">
+                        Falar comigo
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicador de Scroll -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
+            <a href="#sobre" class="text-slate-500 hover:text-white transition-colors">
+                <i data-lucide="chevron-down" class="w-8 h-8"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Sobre Section -->
+    <section id="sobre" class="py-20 lg:py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <h2 class="text-sm font-bold tracking-widest text-brand-500 uppercase mb-3">Sobre Mim</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6">Expertise técnica com visão de negócios.</h3>
+                    <div class="space-y-4 text-slate-400 text-lg leading-relaxed">
+                        <p>
+                            Como <strong class="text-white">Analista de TI</strong>, dedico-me a garantir que a tecnologia trabalhe a favor das pessoas e das empresas. Minha base técnica sólida me permite resolver problemas complexos de forma eficiente.
+                        </p>
+                        <p>
+                            Além da minha atuação corporativa, canalizo minha paixão por tecnologia e criação através de dois empreendimentos próprios. Acredito que a combinação de serviço técnico de excelência e criatividade é o que gera valor real no mercado atual.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-8 flex gap-4">
+                        <a href="https://www.linkedin.com/in/luiz-feliph-madeiro-dos-santos-514bb8237" target="_blank" class="p-3 rounded-full bg-slate-800/50 hover:bg-brand-600 hover:text-white transition-colors text-slate-300">
+                            <i data-lucide="linkedin" class="w-6 h-6"></i>
+                        </a>
+                        <a href="https://wa.me/5598984220207" target="_blank" class="p-3 rounded-full bg-slate-800/50 hover:bg-green-500 hover:text-white transition-colors text-slate-300">
+                            <i data-lucide="message-circle" class="w-6 h-6"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="relative reveal delay-1">
+                    <div class="aspect-square rounded-2xl overflow-hidden relative glass-card p-2">
+                        <!-- Imagem placeholder ou foto profissional. Idealmente, substitua por uma foto real sua -->
+                        <div class="w-full h-full rounded-xl bg-slate-800 flex items-center justify-center relative overflow-hidden group">
+                            <!-- Padrão decorativo de fundo para substituir imagem vazia -->
+                            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#38bdf8 1px, transparent 1px); background-size: 20px 20px;"></div>
+                            <div class="relative z-10 text-center">
+                                <i data-lucide="terminal" class="w-20 h-20 mx-auto text-brand-500/50 mb-4"></i>
+                                <span class="text-slate-500 font-mono text-sm">&lt;analista_de_ti /&gt;</span>
+                            </div>
+                            
+                            <!-- Efeito de brilho hover -->
+                            <div class="absolute inset-0 bg-gradient-to-tr from-brand-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+                    </div>
+                    <!-- Estatística flutuante -->
+                    <div class="absolute -bottom-6 -left-6 glass-card p-4 rounded-2xl animate-float">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 bg-brand-500/20 rounded-xl text-brand-400">
+                                <i data-lucide="server" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-400">Especialidade</p>
+                                <p class="font-bold text-white">Infra & Suporte</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Empresas Section -->
+    <section id="empresas" class="py-20 lg:py-32 relative bg-slate-900/50 border-y border-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                <h2 class="text-sm font-bold tracking-widest text-brand-500 uppercase mb-3">Empreendimentos</h2>
+                <h3 class="text-3xl md:text-4xl font-bold">Soluções completas em <br/> Tecnologia e Personalização.</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- LFByte Card -->
+                <div class="glass-card rounded-3xl p-8 lg:p-10 relative overflow-hidden group reveal delay-1">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
+                        <i data-lucide="cpu" class="w-32 h-32 text-brand-500"></i>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-brand-500/20 flex items-center justify-center mb-8 border border-brand-500/30">
+                            <i data-lucide="monitor-smartphone" class="w-8 h-8 text-brand-400"></i>
+                        </div>
+                        
+                        <h4 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            LFByte
+                            <span class="text-xs px-2 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/20 font-medium">Informática</span>
+                        </h4>
+                        
+                        <p class="text-slate-400 mb-6 min-h-[80px]">
+                            Serviços de Informática e Assistência técnica especializada. Manutenção de computadores, estruturação de redes e soluções em infraestrutura para o seu negócio.
+                        </p>
+                        
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500"></i>
+                                Manutenção Preventiva e Corretiva
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500"></i>
+                                Infraestrutura de Redes
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-500"></i>
+                                Assistência Especializada
+                            </li>
+                        </ul>
+                        
+                        <div class="flex items-center gap-4 flex-wrap">
+                            <a href="https://wa.me/5598984220207?text=Olá, gostaria de saber mais sobre os serviços da LFByte." target="_blank" class="text-sm font-semibold text-white hover:text-brand-400 flex items-center gap-2 transition-colors">
+                                Solicitar Suporte <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
+                            <a href="https://www.instagram.com/lfbyte" target="_blank" class="px-4 py-2 rounded-full bg-slate-800 hover:bg-gradient-to-tr hover:from-purple-600 hover:to-pink-500 hover:text-white transition-all text-slate-300 flex items-center gap-2 text-sm ml-auto">
+                                <i data-lucide="instagram" class="w-4 h-4"></i> Instagram
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LFLaser Card -->
+                <div class="glass-card rounded-3xl p-8 lg:p-10 relative overflow-hidden group reveal delay-2">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
+                        <i data-lucide="zap" class="w-32 h-32 text-amber-500"></i>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center mb-8 border border-amber-500/30">
+                            <i data-lucide="flame" class="w-8 h-8 text-amber-400"></i>
+                        </div>
+                        
+                        <h4 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                            LFLaser
+                            <span class="text-xs px-2 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/20 font-medium">Gravação a Laser</span>
+                        </h4>
+                        
+                        <p class="text-slate-400 mb-6 min-h-[80px]">
+                            Transformando objetos em memórias únicas. Especialistas em gravação a laser de alta precisão. Personalizamos garrafas, copos, brindes corporativos e muito mais.
+                        </p>
+                        
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-500"></i>
+                                Copos e Garrafas Térmicas
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-500"></i>
+                                Brindes Corporativos
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-500"></i>
+                                Presentes Personalizados
+                            </li>
+                        </ul>
+                        
+                        <div class="flex items-center gap-4 flex-wrap">
+                            <a href="https://wa.me/5598984220207?text=Olá, gostaria de fazer um orçamento com a LFLaser." target="_blank" class="text-sm font-semibold text-white hover:text-amber-400 flex items-center gap-2 transition-colors">
+                                Fazer Orçamento <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
+                            <a href="https://www.instagram.com/lflaser_" target="_blank" class="px-4 py-2 rounded-full bg-slate-800 hover:bg-gradient-to-tr hover:from-purple-600 hover:to-pink-500 hover:text-white transition-all text-slate-300 flex items-center gap-2 text-sm ml-auto">
+                                <i data-lucide="instagram" class="w-4 h-4"></i> Instagram
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato Section -->
+    <section id="contato" class="py-20 lg:py-32 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <div class="inline-block p-4 rounded-full bg-brand-500/10 mb-6">
+                <i data-lucide="mail" class="w-10 h-10 text-brand-500"></i>
+            </div>
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">Vamos conversar?</h2>
+            <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+                Seja para suporte de TI através da LFByte, uma personalização exclusiva com a LFLaser, ou para networking. Estou à disposição.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="https://wa.me/5598984220207" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full font-medium transition-colors flex items-center justify-center gap-3 shadow-lg shadow-[#25D366]/20">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    WhatsApp: (98) 98422-0207
+                </a>
+                
+                <a href="https://www.linkedin.com/in/luiz-feliph-madeiro-dos-santos-514bb8237" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-[#0A66C2] hover:bg-[#084e96] text-white rounded-full font-medium transition-colors flex items-center justify-center gap-3 shadow-lg shadow-[#0A66C2]/20">
+                    <i data-lucide="linkedin" class="w-5 h-5"></i>
+                    Conectar no LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/50 bg-slate-900/30 pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex flex-col items-center md:items-start">
+                    <span class="font-bold text-xl tracking-tighter mb-2">feliph<span class="text-brand-500">.</span>com</span>
+                    <p class="text-sm text-slate-500">Analista de TI & Empreendedor</p>
+                </div>
+                
+                <div class="flex gap-6">
+                    <a href="https://www.linkedin.com/in/luiz-feliph-madeiro-dos-santos-514bb8237" target="_blank" class="text-slate-500 hover:text-brand-400 transition-colors">
+                        <span class="sr-only">LinkedIn</span>
+                        <i data-lucide="linkedin" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://www.instagram.com/lfbyte" target="_blank" class="text-slate-500 hover:text-brand-400 transition-colors">
+                        <span class="sr-only">Instagram LFByte</span>
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://www.instagram.com/lflaser_" target="_blank" class="text-slate-500 hover:text-amber-400 transition-colors">
+                        <span class="sr-only">Instagram LFLaser</span>
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-slate-800/50 text-center flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
+                <p>&copy; 2026 Luiz Feliph. Todos os direitos reservados.</p>
+                <div class="mt-4 md:mt-0 space-x-4">
+                    <span>LFByte</span>
+                    <span class="text-slate-700">|</span>
+                    <span>LFLaser</span>
+                </div>
+            </div>
+        </div>
     </footer>
 
+    <!-- Scripts -->
+    <script>
+        // Inicializa os ícones do Lucide
+        lucide.createIcons();
+
+        // Lógica do Menu Mobile
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Fechar menu mobile ao clicar em um link
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Efeito de sombra na Navbar ao fazer scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-lg', 'bg-slate-900/90');
+                navbar.classList.remove('bg-slate-900/70');
+            } else {
+                navbar.classList.remove('shadow-lg', 'bg-slate-900/90');
+                navbar.classList.add('bg-slate-900/70');
+            }
+        });
+
+        // Animação de revelação ao fazer scroll (Scroll Reveal)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100; // Ponto em que o elemento aparece
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        
+        window.addEventListener("scroll", reveal);
+        // Chama uma vez para verificar elementos já visíveis na tela inicial
+        reveal();
+    </script>
 </body>
 </html>
